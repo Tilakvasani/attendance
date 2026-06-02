@@ -1,1 +1,24 @@
-.venv
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# Data (never commit real face data or logs)
+data/registered_faces/
+data/attendance_log.csv
+data/embeddings_cache.pkl
+data/temp_frames/
+
+# Env
+.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
