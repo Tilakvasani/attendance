@@ -64,7 +64,7 @@ def camera_worker() -> None:
     Reads frames, runs recognition every FRAME_SKIP frames, annotates, stores JPEG.
     """
     TEMP_DIR.mkdir(parents=True, exist_ok=True)
-    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)   # CAP_DSHOW = faster init on Windows
+    cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)   # CAP_DSHOW = faster init on Windows
 
     if not cap.isOpened():
         # Fall back without backend flag (Linux / macOS)
