@@ -16,9 +16,9 @@ import pickle
 import time
 from typing import Optional
 
-import cv2
-import numpy as np
-from deepface import DeepFace
+import cv2 # pyright: ignore[reportMissingImports]
+import numpy as np # pyright: ignore[reportMissingImports]
+from deepface import DeepFace # pyright: ignore[reportMissingImports]
 
 from . import state
 from .config import (
@@ -218,18 +218,30 @@ def is_dedup_hit(embedding: list, ttl: float) -> bool:
     return False
 
 
+def extract_embedding_from_array(image: np.ndarray) -> Optional[list]:
+    """Extract embedding directly from a numpy image array — no disk I/O."""
+    try:
+        result = DeepFace.represent(
+            img_path=image,
+            model_name=MODEL_NAME,
+            detector_backend=DETECTOR_VIDEO,
+            enforce_detection=True,
+        )
+        return result[0]["embedding"]
+    except Exception:
+        return None
+
+
 def detect_faces_in_frame(frame: np.ndarray) -> list[dict]:
     """
     Detect all faces in a BGR frame using DeepFace.extract_faces.
     Returns list of {"x", "y", "w", "h", "image": np.ndarray (face crop)}.
     Never raises.
     """
-    import tempfile, os
-    tmp = tempfile.mktemp(suffix=".jpg")
     try:
-        cv2.imwrite(tmp, frame)
+        # Pass numpy array directly — no temp file needed
         faces = DeepFace.extract_faces(
-            img_path=tmp,
+            img_path=frame,
             detector_backend=DETECTOR_VIDEO,
             enforce_detection=False,
         )
@@ -249,6 +261,3 @@ def detect_faces_in_frame(frame: np.ndarray) -> list[dict]:
         return result
     except Exception:
         return []
-    finally:
-        if os.path.exists(tmp):
-            os.unlink(tmp)

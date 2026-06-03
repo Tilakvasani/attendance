@@ -15,7 +15,7 @@ os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL",  "3")
 
 # ── Load .env if present ───────────────────────────────────────────────────────
 try:
-    from dotenv import load_dotenv
+    from dotenv import load_dotenv # pyright: ignore[reportMissingImports]
     load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 except ImportError:
     pass  # python-dotenv optional; values fall back to os.getenv defaults
@@ -36,7 +36,7 @@ DISTANCE_METRIC  = "cosine"
 THRESHOLD        = float(os.getenv("THRESHOLD", "0.60"))   # tune per environment
 
 # ── Performance ───────────────────────────────────────────────────────────────
-FRAME_SKIP      = int(os.getenv("FRAME_SKIP",     "3"))    # run DeepFace every N frames
+FRAME_SKIP      = int(os.getenv("FRAME_SKIP",     "10"))   # run DeepFace every N frames
 MIN_FACE_SIZE   = int(os.getenv("MIN_FACE_SIZE",  "60"))   # pixels; smaller = skip
 BLUR_THRESHOLD  = float(os.getenv("BLUR_THRESHOLD","100")) # Laplacian variance
 VOTING_WINDOW   = int(os.getenv("VOTING_WINDOW",  "5"))    # frames before triggering confirm

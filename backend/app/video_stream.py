@@ -16,8 +16,6 @@ Cross-file rule:
   - Shared dicts live in state.
 """
 
-import os
-import tempfile
 import threading
 import time
 import uuid
@@ -36,7 +34,7 @@ from .config import (
 )
 from .face_utils import (
     detect_faces_in_frame,
-    extract_embedding_from_path,
+    extract_embedding_from_array,
     is_dedup_hit,
     match_embedding,
 )
@@ -146,17 +144,8 @@ def _process_frame(frame) -> list[dict]:
         x, y, w, h  = face["x"], face["y"], face["w"], face["h"]
         crop        = face["image"]
 
-        # Save crop to temp file so extract_embedding_from_path can read it
-        tmp = tempfile.mktemp(suffix=".jpg", dir=str(TEMP_DIR))
-        cv2.imwrite(tmp, crop)
-
-        try:
-            embedding = extract_embedding_from_path(tmp)
-        finally:
-            try:
-                os.unlink(tmp)
-            except OSError:
-                pass
+        # Extract embedding directly from crop array — no disk I/O
+        embedding = extract_embedding_from_array(crop)
 
         if embedding is None:
             results.append({"x": x, "y": y, "w": w, "h": h,
@@ -295,19 +284,20 @@ def stop_camera() -> dict:
 # ── MJPEG generator ───────────────────────────────────────────────────────────
 
 def mjpeg_generator() -> Generator[bytes, None, None]:
-    """Yield multipart MJPEG chunks (~25 fps to browser)."""
+    """Yield multipart MJPEG chunks (~25 fps to browser), skipping duplicate frames."""
+    last_frame = None
     while state.camera["running"]:
         with state.camera["lock"]:
             frame = state.camera["frame"]
 
-        if frame is None:
-            time.sleep(0.04)
+        if frame is None or frame is last_frame:
+            time.sleep(0.02)
             continue
 
+        last_frame = frame
         yield (
             b"--frame\r\n"
             b"Content-Type: image/jpeg\r\n\r\n"
             + frame
             + b"\r\n"
         )
-        time.sleep(0.04)   # ~25 fps
