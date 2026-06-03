@@ -31,24 +31,24 @@ from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, StreamingResponse
 
-from attendance import ensure_log_exists, get_attendance
-from cleanup import start_cleanup
-from config import ALLOWED_ORIGINS, REGISTERED_DIR, TEMP_DIR
-from face_utils import (
+from .attendance import ensure_log_exists, get_attendance
+from .cleanup import start_cleanup
+from .config import ALLOWED_ORIGINS, REGISTERED_DIR, TEMP_DIR
+from .face_utils import (
     add_person_to_cache,
     load_cache,
     remove_person_from_cache,
     extract_embedding_from_path,
     match_embedding,
 )
-from video_stream import (
+from .video_stream import (
     confirm_pending,
     get_pending_list,
     mjpeg_generator,
     start_camera,
     stop_camera,
 )
-import state
+from . import state
 
 
 # ── Lifespan ──────────────────────────────────────────────────────────────────

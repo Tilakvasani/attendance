@@ -1,24 +1,37 @@
-# Python
+# ── Environment ───────────────────────────────────────────────────
+.env
+
+# ── Python ────────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *.pyo
 .venv/
 venv/
 *.egg-info/
+dist/
+build/
 
-# Data (never commit real face data or logs)
-data/registered_faces/
-data/attendance_log.csv
-data/embeddings_cache.pkl
-data/temp_frames/
+# ── Face data (never commit real biometric data) ──────────────────
+backend/data/registered_faces/
+backend/data/attendance_log.csv
+backend/data/embeddings_cache.pkl
+backend/data/temp_frames/
 
-# Env
-.env
+# ── Next.js ───────────────────────────────────────────────────────
+frontend/.next/
+frontend/out/
+frontend/node_modules/
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
 
-# OS
+# ── OS ────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
 
-# IDE
+# ── IDE ───────────────────────────────────────────────────────────
 .vscode/
 .idea/
+*.swp
+*.swo

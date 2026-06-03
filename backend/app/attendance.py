@@ -17,7 +17,7 @@ from typing import Optional
 
 import pandas as pd
 
-from config import LOG_PATH
+from .config import LOG_PATH
 
 # File-level lock so concurrent API requests don't corrupt the CSV.
 _csv_lock = threading.Lock()

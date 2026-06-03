@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+
+  # ── FastAPI backend ────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: face_attendance_backend
+    ports:
+      - "8000:8000"
+    volumes:
+      # Persist registered faces and attendance logs between restarts
+      - ./backend/data:/backend/data
+    environment:
+      - TF_ENABLE_ONEDNN_OPTS=0
+      - TF_CPP_MIN_LOG_LEVEL=3
+      - THRESHOLD=${THRESHOLD:-0.60}
+      - FRAME_SKIP=${FRAME_SKIP:-3}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:3000}
+    # Webcam passthrough (Linux host only). Remove if not needed.
+    # devices:
+    #   - /dev/video0:/dev/video0
+    restart: unless-stopped
+
+  # ── Next.js frontend ───────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: face_attendance_frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+
+networks:
+  default:
+    name: face_attendance_network

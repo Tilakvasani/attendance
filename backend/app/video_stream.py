@@ -25,16 +25,16 @@ from typing import Generator
 
 import cv2
 
-import state
-from attendance import is_marked_today, mark_attendance
-from config import (
+from . import state
+from .attendance import is_marked_today, mark_attendance
+from .config import (
     CONFIRMATION_TTL,
     DEDUP_TTL_SEC,
     FRAME_SKIP,
     TEMP_DIR,
     VOTING_WINDOW,
 )
-from face_utils import (
+from .face_utils import (
     detect_faces_in_frame,
     extract_embedding_from_path,
     is_dedup_hit,

@@ -13,8 +13,8 @@ Cross-file rule: Only touches state dicts (via locks) and the TEMP_DIR filesyste
 import threading
 import time
 
-import state
-from config import CLEANUP_INTERVAL, CONFIRMATION_TTL, DEDUP_TTL_SEC, TEMP_DIR
+from . import state
+from .config import CLEANUP_INTERVAL, CONFIRMATION_TTL, DEDUP_TTL_SEC, TEMP_DIR
 
 
 def _expire_pending() -> int:

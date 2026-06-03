@@ -20,8 +20,8 @@ import cv2
 import numpy as np
 from deepface import DeepFace
 
-import state
-from config import (
+from . import state
+from .config import (
     BLUR_THRESHOLD,
     CACHE_PATH,
     DETECTOR_ENROLL,
